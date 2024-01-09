@@ -1,48 +1,52 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="styles.css">
-    <title>Calculator</title>
-  </head>
-  <body>
-    <div class="calculator">
-      <div class="display">0</div>
-      <div class="buttons">
-        <div class="first row">
-          <button class = "options">Clear</button>
-          <button class = "options">Delete</button>
-          <button class ="operator">/</button>
-        </div>
-        <div class="second row">
-          <button class = "number">7</button>
-          <button class = "number">8</button>
-          <button class = "number">9</button>
-          <button class = "operator">x</button>
-        </div>
-        <div class="third row">
-          <button class = "number">4</button>
-          <button class = "number">5</button>
-          <button class = "number">6</button>
-          <button class ="operator">-</button>
-        </div>
-        <div class="fourth row">
-          <button class = "number">1</button>
-          <button class = "number">2</button>
-          <button class = "number">3</button>
-          <button class ="operator">+</button>
-        </div>
-        <div class="fifth row">
-          <button class = "number">0</button>
-          <button class ="operator">.</button>
-          <button class="equals">=</button>
-        </div>
-      </div>
 
-      
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="styles.css">
+  <title>Calculator</title>
+  <script src="script.js" defer></script>
+
+</head>
+
+<body>
+  <div class="calculator">
+    <div id="display" class="display">0</div>
+    <div class="buttons">
+      <div class="first row">
+        <button class="options">Clear</button>
+        <button class="options">Delete</button>
+        <button data-operation="divide" class="operator">/</button>
+      </div>
+      <div class="second row">
+        <button data-number="7" class="number">7</button>
+        <button data-number="8" class="number">8</button>
+        <button data-number="9" class="number">9</button>
+        <button data-operation="multiply" class="operator">x</button>
+      </div>
+      <div class="third row">
+        <button data-number="4" class="number">4</button>
+        <button data-number="5" class="number">5</button>
+        <button data-number="6" class="number">6</button>
+        <button data-operation="substract" class="operator">-</button>
+      </div>
+      <div class="fourth row">
+        <button data-number="1" class="number">1</button>
+        <button data-number="2" class="number">2</button>
+        <button data-number="3" class="number">3</button>
+        <button data-operation="add" class="operator">+</button>
+      </div>
+      <div class="fifth row">
+        <button class="number">0</button>
+        <button class="comma">.</button>
+        <button class="equals">=</button>
+      </div>
     </div>
-    <footer>epomarez - 2024 - The Odin Project</footer>
-  </body>
+  </div>
+  <footer>epomarez - 2024 - The Odin Project</footer>
+
+</body>
+
 </html>
