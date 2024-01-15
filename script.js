@@ -9,7 +9,7 @@ const clearButton = document.getElementById('clear-btn');
 let numberOfCommas = 0;
 
 let calculatorHistory = {
-    firstNumber: '',
+    firstNumber: '0',
     secondNumber: '',
     operator: '',
     operatorIsPressed: false,
@@ -33,7 +33,7 @@ function cleanScreen() {
 }
 
 function clearHistory() {
-    calculatorHistory.update('', '', '');
+    calculatorHistory.update('0', '', '');
 }
 
 function addEventToClearButton(clearButton) {
