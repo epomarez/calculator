@@ -21,12 +21,18 @@ let calculatorHistory = {
     }
 }
 
+// If it is 0, deletes 0 and adds a number; if not, adds
+// a number next to existing number
 function addNumberToScreen(number) {
     if (screenDiv.textContent !== "0") {
         screenDiv.textContent += `${number}`;
     } else {
         screenDiv.textContent = `${number}`;
     }
+}
+
+function setScreenContent(value) {
+
 }
 
 function cleanScreen() {
@@ -44,27 +50,27 @@ function addEventToClearButton(clearButton) {
     });
 };
 
+function deleteNumber(number) {
+    if (number.length !== 1) {
+        return number.slice(0, -1);
+    } else {
+        return '0';
+    }
+}
+
 function addEventToDeleteButton(deleteButton) {
     deleteButton.addEventListener('click', () => {
         if (screenDiv.textContent !== '0') {
+            if (isNaN(parseFloat(screenDiv.textContent))) {
+                calculatorHistory.firstNumber = '0';
+                screenDiv.textContent = '0';
+            }
             if (calculatorHistory.operator === '') {
-                if (calculatorHistory.firstNumber.length !== 1) {
-                    calculatorHistory.firstNumber = calculatorHistory.firstNumber.slice(0, -1);
-                    screenDiv.textContent = calculatorHistory.firstNumber;
-                } else {
-                    calculatorHistory.firstNumber = 0;
-                    screenDiv.textContent = 0;
-                }
-
+                calculatorHistory.firstNumber = deleteNumber(calculatorHistory.firstNumber);
+                screenDiv.textContent = calculatorHistory.firstNumber;
             } else {
-                if (calculatorHistory.secondNumber.length !== 1) {
-                    calculatorHistory.secondNumber = calculatorHistory.secondNumber.slice(0, - 1);
-                    screenDiv.textContent = calculatorHistory.secondNumber;
-                } else {
-                    calculatorHistory.secondNumber = 0;
-                    screenDiv.textContent = 0;
-                }
-
+                calculatorHistory.secondNumber = deleteNumber(calculatorHistory.secondNumber);
+                screenDiv.textContent = calculatorHistory.secondNumber;
             }
         }
     });
@@ -81,20 +87,23 @@ function addEventToEqualsButton(equalsButton) {
     });
 }
 
+function addNumber(buttonNumber) {
+    addNumberToScreen(buttonNumber);
+    return screenDiv.textContent;
+}
+
 function addEventToNumberButtons(numberButtons) {
     [...numberButtons].forEach((button) => {
         button.addEventListener('click', () => {
             if (calculatorHistory.operatorIsPressed) {
-                screenDiv.textContent = 0;
+                screenDiv.textContent = '0';
                 calculatorHistory.operatorIsPressed = false;
             }
             if (calculatorHistory.operator !== '') {
-                addNumberToScreen(button.dataset.number);
-                calculatorHistory.secondNumber = screenDiv.textContent
+                calculatorHistory.secondNumber = addNumber(button.dataset.number);
 
             } else {
-                addNumberToScreen(button.dataset.number);
-                calculatorHistory.firstNumber = screenDiv.textContent;
+                calculatorHistory.firstNumber = addNumber(button.dataset.number);
             }
         });
     });
@@ -105,7 +114,9 @@ function addEventToOperatorButtons(operatorButtons) {
         button.addEventListener('click', () => {
             if (!calculatorHistory.operatorIsPressed) {
                 if (calculatorHistory.secondNumber !== '') {
-                    performOperation();
+                    let result = operate();
+                    calculatorHistory.update(result, '', '');
+                    screenDiv.textContent = result;
                 }
                 calculatorHistory.operator = button.dataset.operation;
                 calculatorHistory.operatorIsPressed = true;
@@ -115,10 +126,20 @@ function addEventToOperatorButtons(operatorButtons) {
     });
 }
 
-function performOperation() {
-    var result = operate(calculatorHistory.operator, calculatorHistory.firstNumber, calculatorHistory.secondNumber);
-    calculatorHistory.update(result, '', '');
-    screenDiv.textContent = result;
+function performOperation(firstNum, secondNum, operation) {
+    switch (operation) {
+        case 'add':
+            return firstNum + secondNum;
+        case 'substract':
+            return firstNum - secondNum;
+        case 'multiply':
+            return firstNum * secondNum;
+        case 'divide':
+            if (secondNum === 0) {
+                return "Error!";
+            }
+            return firstNum / secondNum;
+    }
 }
 
 function addEventToCommaButton(commaButton) {
@@ -141,46 +162,22 @@ function addEventsToButtons(commaButton, numberButtons, operatorButtons, equalsB
     addEventToDeleteButton(deleteButton);
 }
 
-function addNumbers(a, b) {
-    return a + b;
-}
+function operate() {
+    const operator = calculatorHistory.operator;
+    const firstNum = parseFloat(calculatorHistory.firstNumber);
+    const secondNum = parseFloat(calculatorHistory.secondNumber);
 
-function substractNumbers(a, b) {
-    return a - b;
-}
-
-function multiplyNumbers(a, b) {
-    return a * b;
-}
-
-function divideNumbers(a, b) {
-    if (b === 0) {
-        return "Error! Divide by 0";
+    if (isNaN(firstNum)) {
+        return "Error!";
     }
-    result = a / b;
-    return result;
-}
 
-function operate(operator, firstValue, secondValue) {
-    firstValue = parseFloat(firstValue);
-    secondValue = parseFloat(secondValue);
-    operationResult = 0;
+    const operationResult = performOperation(firstNum, secondNum, operator);
 
-    switch (operator) {
-        case 'add':
-            operationResult = addNumbers(firstValue, secondValue);
-            break;
-        case 'substract':
-            operationResult = substractNumbers(firstValue, secondValue);
-            break;
-        case 'multiply':
-            operationResult = multiplyNumbers(firstValue, secondValue);
-            break;
-        case 'divide':
-            operationResult = divideNumbers(firstValue, secondValue);
-            break;
+    if (typeof operationResult === 'string') {
+        return operationResult;
+    } else {
+        return Number(operationResult.toFixed(2));
     }
-    return Number(operationResult.toFixed(2)).toString();
 }
 
 // Necesito agregar la función para equals, y las opciones de borrado.
