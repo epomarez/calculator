@@ -4,7 +4,20 @@ const optionButtons = document.getElementsByClassName("options");
 const screenDiv = document.getElementById('display');
 const commaButton = document.querySelector('.comma');
 const equalsButton = document.querySelector('.equals');
+
 let numberOfCommas = 0;
+
+let calculatorHistory = {
+    firstNumber: '',
+    secondNumber: '',
+    operator: '',
+    operatorIsPressed: false,
+    update: function (firstNum, secondNumb, operator) {
+        this.firstNumber = firstNum;
+        this.secondNumber = secondNumb;
+        this.operator = operator;
+    }
+}
 
 function addNumberToScreen(number) {
     if (screenDiv.textContent !== "0") {
@@ -16,6 +29,17 @@ function addNumberToScreen(number) {
 
 function cleanScreen() {
     screenDiv.textContent = '0';
+}
+
+function addEventToEqualsButton(equalsButton) {
+    equalsButton.addEventListener('click', () => {
+        if (calculatorHistory.secondNumber !== '') {
+            let result = operate(calculatorHistory.operator, calculatorHistory.firstNumber, calculatorHistory.secondNumber);
+            screenDiv.textContent = result;
+            calculatorHistory.update(result, '', '');
+            numberOfCommas = 0;
+        }
+    });
 }
 
 function addEventToNumberButtons(numberButtons) {
@@ -46,6 +70,7 @@ function addEventToOperatorButtons(operatorButtons) {
                 }
                 calculatorHistory.operator = button.dataset.operation;
                 calculatorHistory.operatorIsPressed = true;
+                numberOfCommas = 0;
             }
         })
     });
@@ -77,11 +102,12 @@ function addEventToCommaButton(commaButton) {
 
 }
 
-function addEventsToButtons(commaButton, numberButtons, operatorButtons, optionButtons) {
+function addEventsToButtons(commaButton, numberButtons, operatorButtons, optionButtons, equalsButton) {
     addEventToNumberButtons(numberButtons);
     addEventToOperatorButtons(operatorButtons);
     addEventToCommaButton(commaButton);
     addEventToOptionButtons(optionButtons);
+    addEventToEqualsButton(equalsButton);
 }
 
 function addNumbers(a, b) {
@@ -126,22 +152,10 @@ function operate(operator, firstValue, secondValue) {
     return operationResult;
 }
 
-let calculatorHistory = {
-    firstNumber: '',
-    secondNumber: '',
-    operator: '',
-    operatorIsPressed: false,
-    update: function (firstNum, secondNumb, operator) {
-        this.firstNumber = firstNum;
-        this.secondNumber = secondNumb;
-        this.operator = operator;
-    }
-}
-
 // Necesito agregar la función para equals, y las opciones de borrado.
 
 function main() {
-    addEventsToButtons(commaButton, numberButtons, operatorButtons, optionButtons);
+    addEventsToButtons(commaButton, numberButtons, operatorButtons, optionButtons, equalsButton);
 }
 
 main();
