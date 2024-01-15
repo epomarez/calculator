@@ -4,6 +4,7 @@ const optionButtons = document.getElementsByClassName("options");
 const screenDiv = document.getElementById('display');
 const commaButton = document.querySelector('.comma');
 const equalsButton = document.querySelector('.equals');
+const clearButton = document.getElementById('clear-btn');
 
 let numberOfCommas = 0;
 
@@ -30,6 +31,17 @@ function addNumberToScreen(number) {
 function cleanScreen() {
     screenDiv.textContent = '0';
 }
+
+function clearHistory() {
+    calculatorHistory.update('', '', '');
+}
+
+function addEventToClearButton(clearButton) {
+    clearButton.addEventListener('click', () => {
+        clearHistory();
+        cleanScreen();
+    });
+};
 
 function addEventToEqualsButton(equalsButton) {
     equalsButton.addEventListener('click', () => {
@@ -102,12 +114,13 @@ function addEventToCommaButton(commaButton) {
 
 }
 
-function addEventsToButtons(commaButton, numberButtons, operatorButtons, optionButtons, equalsButton) {
+function addEventsToButtons(commaButton, numberButtons, operatorButtons, optionButtons, equalsButton, clearButton) {
     addEventToNumberButtons(numberButtons);
     addEventToOperatorButtons(operatorButtons);
     addEventToCommaButton(commaButton);
     addEventToOptionButtons(optionButtons);
     addEventToEqualsButton(equalsButton);
+    addEventToClearButton(clearButton);
 }
 
 function addNumbers(a, b) {
@@ -155,7 +168,7 @@ function operate(operator, firstValue, secondValue) {
 // Necesito agregar la función para equals, y las opciones de borrado.
 
 function main() {
-    addEventsToButtons(commaButton, numberButtons, operatorButtons, optionButtons, equalsButton);
+    addEventsToButtons(commaButton, numberButtons, operatorButtons, optionButtons, equalsButton, clearButton);
 }
 
 main();
