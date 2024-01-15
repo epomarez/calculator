@@ -1,10 +1,10 @@
 const numberButtons = document.getElementsByClassName("number");
 const operatorButtons = document.getElementsByClassName("operator");
-const optionButtons = document.getElementsByClassName("options");
 const screenDiv = document.getElementById('display');
 const commaButton = document.querySelector('.comma');
 const equalsButton = document.querySelector('.equals');
 const clearButton = document.getElementById('clear-btn');
+const deleteButton = document.getElementById('delete-btn');
 
 let numberOfCommas = 0;
 
@@ -13,6 +13,7 @@ let calculatorHistory = {
     secondNumber: '',
     operator: '',
     operatorIsPressed: false,
+    writingSecondNumber: false,
     update: function (firstNum, secondNumb, operator) {
         this.firstNumber = firstNum;
         this.secondNumber = secondNumb;
@@ -40,6 +41,32 @@ function addEventToClearButton(clearButton) {
     clearButton.addEventListener('click', () => {
         clearHistory();
         cleanScreen();
+    });
+};
+
+function addEventToDeleteButton(deleteButton) {
+    deleteButton.addEventListener('click', () => {
+        if (screenDiv.textContent !== '0') {
+            if (calculatorHistory.operator === '') {
+                if (calculatorHistory.firstNumber.length !== 1) {
+                    calculatorHistory.firstNumber = calculatorHistory.firstNumber.slice(0, -1);
+                    screenDiv.textContent = calculatorHistory.firstNumber;
+                } else {
+                    calculatorHistory.firstNumber = 0;
+                    screenDiv.textContent = 0;
+                }
+
+            } else {
+                if (calculatorHistory.secondNumber.length !== 1) {
+                    calculatorHistory.secondNumber = calculatorHistory.secondNumber.slice(0, - 1);
+                    screenDiv.textContent = calculatorHistory.secondNumber;
+                } else {
+                    calculatorHistory.secondNumber = 0;
+                    screenDiv.textContent = 0;
+                }
+
+            }
+        }
     });
 };
 
@@ -94,15 +121,6 @@ function performOperation() {
     screenDiv.textContent = result;
 }
 
-
-function addEventToOptionButtons(optionButtons) {
-    [...optionButtons].forEach((button) => {
-        button.addEventListener('click', () => {
-            cleanScreen();
-        })
-    })
-}
-
 function addEventToCommaButton(commaButton) {
 
     commaButton.addEventListener('click', () => {
@@ -114,13 +132,13 @@ function addEventToCommaButton(commaButton) {
 
 }
 
-function addEventsToButtons(commaButton, numberButtons, operatorButtons, optionButtons, equalsButton, clearButton) {
+function addEventsToButtons(commaButton, numberButtons, operatorButtons, equalsButton, clearButton, deleteButton) {
     addEventToNumberButtons(numberButtons);
     addEventToOperatorButtons(operatorButtons);
     addEventToCommaButton(commaButton);
-    addEventToOptionButtons(optionButtons);
     addEventToEqualsButton(equalsButton);
     addEventToClearButton(clearButton);
+    addEventToDeleteButton(deleteButton);
 }
 
 function addNumbers(a, b) {
@@ -162,13 +180,13 @@ function operate(operator, firstValue, secondValue) {
             operationResult = divideNumbers(firstValue, secondValue);
             break;
     }
-    return operationResult;
+    return Number(operationResult.toFixed(2)).toString();
 }
 
 // Necesito agregar la función para equals, y las opciones de borrado.
 
 function main() {
-    addEventsToButtons(commaButton, numberButtons, operatorButtons, optionButtons, equalsButton, clearButton);
+    addEventsToButtons(commaButton, numberButtons, operatorButtons, equalsButton, clearButton, deleteButton);
 }
 
 main();
